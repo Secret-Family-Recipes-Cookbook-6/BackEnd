@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "cross-env DB_ENV=testing jest --watch"
   },
   "repository": "https://github.com/Secret-Family-Recipes-Cookbook-6/BackEnd.git",
   "author": "Chris Vasquez <chrvasq@outlook.com>",
@@ -21,9 +22,13 @@
     "pg": "^7.18.2"
   },
   "devDependencies": {
+    "cross-env": "^7.0.0",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "sqlite3": "^4.1.1",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
