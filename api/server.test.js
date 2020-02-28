@@ -8,4 +8,8 @@ describe("server", () => {
     expect(res.status).toBe(200);
     expect(res.body).toStrictEqual({ api: "up" });
   });
+
+  it("should be the testing environment", () => {
+    expect(process.env.DB_ENV).toBe("testing");
+  });
 });

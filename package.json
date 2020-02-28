@@ -5,7 +5,11 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing jest --watch"
+    "test": "cross-env DB_ENV=testing jest --watch",
+    "rollback": "npx knex migrate:rollback",
+    "latest": "npx knex migrate:latest",
+    "rollback-test": "npx knex migrate:rollback --env testing",
+    "latest-test": "npx knex migrate:latest --env testing"
   },
   "repository": "https://github.com/Secret-Family-Recipes-Cookbook-6/BackEnd.git",
   "author": "Chris Vasquez <chrvasq@outlook.com>",
