@@ -1,5 +1,5 @@
 require("dotenv").config();
-const genToken = require("./genToken");
+const genToken = require("../api/utils/genToken");
 const jwt = require("jsonwebtoken");
 
 describe("getToken", () => {
