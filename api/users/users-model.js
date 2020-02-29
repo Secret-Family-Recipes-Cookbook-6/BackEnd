@@ -9,6 +9,12 @@ const addUser = async user => {
   return findUserById(id);
 };
 
+const findUserByUsername = username => {
+  return db("users")
+    .where({ username })
+    .first();
+};
+
 const findUserById = id => {
   return db("users")
     .where({ id })
@@ -22,14 +28,19 @@ const deleteUser = async id => {
     .del();
 };
 
-const updateUser = (id, changes) => {
-  return null;
+const updateUser = async (id, changes) => {
+  await db("users")
+    .where({ id })
+    .update(changes);
+
+  return findUserById(id);
 };
 
 module.exports = {
   findUsers,
   addUser,
   findUserById,
+  findUserByUsername,
   deleteUser,
   updateUser
 };
