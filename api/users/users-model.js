@@ -5,20 +5,21 @@ const findUsers = () => {
 };
 
 const addUser = async user => {
-  try {
-    const newUser = await db("users").insert(user);
-    return newUser; // todo  return findUserById
-  } catch (err) {
-    return null;
-  }
+  const [id] = await db("users").insert(user);
+  return findUserById(id);
 };
 
 const findUserById = id => {
-  return null;
+  return db("users")
+    .where({ id })
+    .select("id", "username")
+    .first();
 };
 
-const deleteUser = id => {
-  return null;
+const deleteUser = async id => {
+  return db("users")
+    .where({ id })
+    .del();
 };
 
 const updateUser = (id, changes) => {
