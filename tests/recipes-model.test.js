@@ -20,6 +20,8 @@ beforeEach(async () => {
     title: "Hamburger",
     source: "Grandma Edna",
     ingredients: "Beef, cheese, lettuce, tomato",
+    instructions:
+      "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
     category: "Lunch",
     user_id: 1
   });
@@ -28,6 +30,8 @@ beforeEach(async () => {
     title: "Cheeseburger",
     source: "Grandma Edna",
     ingredients: "Beef, cheese, lettuce, tomato",
+    instructions:
+      "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
     category: "Dinner",
     user_id: 1
   });
@@ -49,6 +53,8 @@ describe("recipes-model", () => {
         title: "Hamburger",
         source: "Grandma Edna",
         ingredients: "Beef, cheese, lettuce, tomato",
+        instructions:
+          "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
         category: "Lunch",
         user_id: 1
       });
@@ -61,6 +67,8 @@ describe("recipes-model", () => {
         title: "Cheeseburger",
         source: "Grandma Edna",
         ingredients: "Beef, cheese, lettuce, tomato",
+        instructions:
+          "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
         category: "Dinner",
         user_id: 1
       });
@@ -77,6 +85,8 @@ describe("recipes-model", () => {
         title: "Hamburger",
         source: "Grandma Edna",
         ingredients: "Beef, cheese, lettuce, tomato",
+        instructions:
+          "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
         category: "Lunch",
         user_id: 1
       });
@@ -112,6 +122,8 @@ describe("recipes-model", () => {
         title: "Veggie Burger",
         source: "Grandma Dina",
         ingredients: "Black beans, cheese, lettuce, tomato",
+        instructions:
+          "Grill the black bean burgers while adding cheese towards the end. Place on bun with condiments and serve.",
         category: "Dinner"
       };
 
@@ -127,6 +139,8 @@ describe("recipes-model", () => {
         title: "Veggie Burger",
         source: "Grandma Dina",
         ingredients: "Black beans, cheese, lettuce, tomato",
+        instructions:
+          "Grill the black bean burgers while adding cheese towards the end. Place on bun with condiments and serve.",
         category: "Dinner",
         user_id: 1
       });

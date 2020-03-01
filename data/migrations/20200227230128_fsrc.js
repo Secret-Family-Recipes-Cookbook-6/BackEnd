@@ -16,6 +16,7 @@ exports.up = function(knex) {
         .unique();
       recipe.string("source", 255).notNullable();
       recipe.string("ingredients", 255).notNullable();
+      recipe.string("instructions", 255).notNullable();
       recipe.string("category", 255).notNullable();
       recipe.string("image", 255).defaultTo("");
       recipe
