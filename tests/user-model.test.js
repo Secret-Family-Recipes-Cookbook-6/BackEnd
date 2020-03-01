@@ -11,27 +11,28 @@ const {
 
 beforeEach(async () => {
   await db("users").truncate();
+
+  await addUser({
+    username: "Chris",
+    password: bcrypt.hashSync("pass", 10)
+  });
+});
+
+afterAll(async () => {
+  await db("users").truncate();
 });
 
 describe("Users model", () => {
   describe("addUser", () => {
     it("should add a new user and return the newly created user", async () => {
-      const user = await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
+      const users = await findUsers();
 
-      expect(user).toEqual({ id: 1, username: "Chris" });
+      expect(users.length).toEqual(1);
     });
   });
 
   describe("findUsers", () => {
     it("should return an array of user objects", async () => {
-      await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
-
       const users = await findUsers();
 
       expect(users).toEqual([{ id: 1, username: "Chris" }]);
@@ -40,11 +41,6 @@ describe("Users model", () => {
 
   describe("findUserById", () => {
     it("should return the user for the id passed in", async () => {
-      await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
-
       const user = await findUserById(1);
 
       expect(user).toEqual({ id: 1, username: "Chris" });
@@ -53,11 +49,6 @@ describe("Users model", () => {
 
   describe("deleteUser", () => {
     it("should delete the user for the id passed in", async () => {
-      await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
-
       await deleteUser(1);
 
       const users = await findUserById(1);
@@ -68,11 +59,6 @@ describe("Users model", () => {
 
   describe("findUserByUsername", () => {
     it("should return user by username", async () => {
-      await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
-
       const user = await findUserByUsername("Chris");
 
       expect(user.username).toBe("Chris");
@@ -81,11 +67,6 @@ describe("Users model", () => {
 
   describe("updateUser", () => {
     it("should update username and password", async () => {
-      await addUser({
-        username: "Chris",
-        password: bcrypt.hashSync("pass", 10)
-      });
-
       const user = await findUserByUsername("Chris");
 
       expect(user.username).toBe("Chris");
