@@ -5,7 +5,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing jest --watch --runInBand --detectOpenHandles",
+    "test": "cross-env DB_ENV=testing jest --watch",
     "rollback-dev": "npx knex migrate:rollback",
     "latest-dev": "npx knex migrate:latest",
     "rollback-test": "npx knex migrate:rollback --env testing",

@@ -7,7 +7,7 @@ const {
   findUserByUsername,
   deleteUser,
   updateUser
-} = require("../api/users/users-model");
+} = require("../api/models/users-model");
 
 beforeEach(async () => {
   await db("users").truncate();
