@@ -21,7 +21,7 @@ afterAll(async () => {
   await db("users").truncate();
 });
 
-describe("Users model", () => {
+describe("users-model", () => {
   describe("addUser", () => {
     it("should add a new user", async () => {
       const users = await findUsers();
