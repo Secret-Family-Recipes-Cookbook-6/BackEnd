@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_SECRET;
+
 const validateUser = (req, res, next) => {
   const { username, password } = req.body;
 
@@ -38,7 +41,24 @@ const validateRecipe = (req, res, next) => {
   }
 };
 
-const auth = (req, res, next) => {};
+const auth = (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (req.decodedJwt) {
+    next();
+  } else if (token) {
+    jwt.verify(token, jwtSecret, (err, decodedJwt) => {
+      if (err) {
+        res.status(401).json({ message: "Couldn't verify token." });
+      } else {
+        req.decodedJwt = decodedJwt;
+        next();
+      }
+    });
+  } else {
+    res.status(401).json({ message: "Not authorized." });
+  }
+};
 
 module.exports = {
   validateUser,
