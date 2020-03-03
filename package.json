@@ -8,6 +8,7 @@
     "test": "cross-env DB_ENV=testing jest ./tests --runInBand --detectOpenHandles --watch",
     "rollback-dev": "npx knex migrate:rollback",
     "latest-dev": "npx knex migrate:latest",
+    "seed-dev": "npx knex seed:run",
     "rollback-test": "npx knex migrate:rollback --env testing",
     "latest-test": "npx knex migrate:latest --env testing",
     "latest-prod": "heroku run knex migrate:latest -a secret-fam-rc",
