@@ -1,7 +1,9 @@
 const db = require("../../data/dbConfig");
 
 const addRecipe = async recipe => {
-  const [id] = await db("recipes").insert(recipe);
+  const [id] = await db("recipes")
+    .insert(recipe)
+    .returning("id");
 
   return findRecipeById(id);
 };
