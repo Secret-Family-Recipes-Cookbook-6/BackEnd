@@ -1,7 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const apiRouter = require("./api-router");
+const apiRouter = require("./routes/api-router");
 
 module.exports = server => {
   server.use(helmet()),

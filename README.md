@@ -9,47 +9,37 @@ Then run `yarn start` and navigate to "http://localhost:5000/api" in your browse
 ## Dependencies
 
 ```
-- express
-- bcryptjs
-- cors
-- dotenv
-- helmet
-- jsonwebtoken
-- knex
-- knex-cleaner
-- pg
+express
+bcryptjs
+cors
+dotenv
+helmet
+jsonwebtoken
+knex
+knex-cleaner
+pg
 ```
 
 ## Dev Dependencies
 
 ```
-- cross-env
-- jest
-- nodemon
-- sqlite3
-- supertest
+cross-env
+jest
+nodemon
+sqlite3
+supertest
 ```
 
 ## Testing
 
 To run the test suite, run `yarn test` in your terminal.
 
-## Deployed URL
+## Base URL
 
-Base URL: https://secret-fam-rc.herokuapp.com/api
-
-### GET Dummy Data /data
+Use this to prefix the beginning of all requests. Moving forward, all endpoints in the linked documentation will assume the base url has already been input before the endpoint being addressed.
 
 ```
-[
-    {
-        id: "integer",
-        title: "string",
-        source: "string",
-        ingredients: "string",
-        category: "string"
-    }
-]
+https://secret-fam-rc.herokuapp.com/api
 ```
 
 ## Documentation
