@@ -4,7 +4,7 @@ module.exports = {
   development: {
     client: "sqlite3",
     connection: {
-      filename: "./fsrc.db3"
+      filename: "./data/fsrc.db3"
     },
     useNullAsDefault: true,
     migrations: {
@@ -23,7 +23,7 @@ module.exports = {
   testing: {
     client: "sqlite3",
     connection: {
-      filename: "./fsrc-test.db3"
+      filename: "./data/fsrc-test.db3"
     },
     useNullAsDefault: true,
     migrations: {

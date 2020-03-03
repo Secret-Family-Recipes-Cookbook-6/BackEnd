@@ -193,5 +193,5 @@ describe("custom-middleware", () => {
       });
       expect(next).toHaveBeenCalled();
     });
-  });
+  }); // todo Add auth middleware tests
 });
