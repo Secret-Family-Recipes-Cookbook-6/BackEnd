@@ -2,11 +2,10 @@ require("dotenv").config();
 const request = require("supertest");
 const server = require("../api/server");
 const db = require("../data/dbConfig");
-const bscrypt = require("bcryptjs");
-const Users = require("../api/models/users-model");
 
-beforeEach(async () => {
+beforeAll(async () => {
   await db("users").truncate();
+  await db("recipes").truncate();
 });
 
 afterAll(async () => {
@@ -27,7 +26,7 @@ describe("server", () => {
   });
 
   describe("/register", () => {
-    it("should return 201 on successful register", async () => {
+    it("should return 201 status, newUser, token on successful register", async () => {
       const res = await request(server)
         .post("/api/register")
         .send({
@@ -36,6 +35,20 @@ describe("server", () => {
         });
 
       expect(res.status).toBe(201);
+      expect(res.body.newUser).toBeTruthy();
+      expect(res.body.token).toBeTruthy();
+    });
+  });
+
+  describe("/login", () => {
+    it("should return 200 status, recipes, token on successful login", async () => {
+      const res = await request(server)
+        .post("/api/login")
+        .send({ username: "Chris", password: "pass" });
+
+      expect(res.status).toBe(200);
+      expect(res.body.token).toBeTruthy();
+      expect(res.body.recipes).toBeTruthy();
     });
   });
 });
