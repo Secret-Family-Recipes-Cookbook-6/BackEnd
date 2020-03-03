@@ -58,7 +58,7 @@ router.post("/register", validateUser, async (req, res) => {
     const token = genToken(newUser);
     res.status(201).json({ newUser, token });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(err.message);
   }
 });
 
@@ -67,15 +67,15 @@ router.post("/login", validateUser, async (req, res) => {
 
   try {
     const user = await Users.findUserByUsername(username);
-    const recipes = await Recipes.findRecipesBy({ user_id: user.id });
     if (user && bcrypt.compareSync(password, user.password)) {
+      const recipes = await Recipes.findRecipesBy({ user_id: user.id });
       const token = genToken(user);
       res.status(200).json({ token, recipes });
     } else {
       res.status(401).json({ message: "Invalid credentials." });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(err.message);
   }
 });
 
