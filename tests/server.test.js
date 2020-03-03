@@ -1,5 +1,5 @@
 const request = require("supertest");
-const server = require("./server");
+const server = require("../api/server");
 
 describe("server", () => {
   it("should be running", async () => {
