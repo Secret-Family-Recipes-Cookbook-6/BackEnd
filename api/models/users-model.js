@@ -22,18 +22,16 @@ const findUserById = id => {
     .first();
 };
 
-const deleteUser = async id => {
+const deleteUser = id => {
   return db("users")
     .where({ id })
     .del();
 };
 
-const updateUser = async (id, changes) => {
-  await db("users")
+const updateUser = (id, changes) => {
+  return db("users")
     .where({ id })
     .update(changes);
-
-  return findUserById(id);
 };
 
 module.exports = {

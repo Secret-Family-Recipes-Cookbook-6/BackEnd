@@ -11,7 +11,6 @@ const {
 
 beforeEach(async () => {
   await db("users").truncate();
-
   await addUser({
     username: "Chris",
     password: bcrypt.hashSync("pass", 10)
@@ -22,9 +21,9 @@ afterAll(async () => {
   await db("users").truncate();
 });
 
-describe("Users model", () => {
+describe("users-model", () => {
   describe("addUser", () => {
-    it("should add a new user and return the newly created user", async () => {
+    it("should add a new user", async () => {
       const users = await findUsers();
 
       expect(users.length).toEqual(1);
