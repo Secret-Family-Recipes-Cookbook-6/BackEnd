@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const Recipes = require("../models/recipes-model");
-const { validateRecipe } = require("../middleware/custom-middleware");
+const {
+  validateRecipe,
+  validateRecipeId
+} = require("../middleware/custom-middleware");
 
 router.get("/recipes", async (req, res) => {
   const { decodedJwt } = req;
@@ -30,27 +33,32 @@ router.post("/recipes", validateRecipe, async (req, res) => {
   }
 });
 
-router.put("/recipes/:id", validateRecipe, async (req, res) => {
-  const { decodedJwt, validRecipe } = req;
-  const { id } = req.params;
+router.put(
+  "/recipes/:id",
+  validateRecipeId,
+  validateRecipe,
+  async (req, res) => {
+    const { decodedJwt, validRecipe } = req;
+    const { validRecipeId } = req;
 
-  try {
-    await Recipes.updateRecipe(id, validRecipe);
+    try {
+      await Recipes.updateRecipe(validRecipeId, validRecipe);
 
-    const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
-    res.status(201).json(recipes);
-  } catch (err) {
-    res.status(500).json(err.message);
+      const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
+      res.status(201).json(recipes);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
   }
-});
+);
 
-router.delete("/recipes/:id", async (req, res) => {
+router.delete("/recipes/:id", validateRecipeId, async (req, res) => {
   const { decodedJwt } = req;
-  const { id } = req.params;
+  const { validRecipeId } = req;
 
   try {
-    const deletedRecipe = await Recipes.findRecipeById(id);
-    await Recipes.deleteRecipe(id);
+    const deletedRecipe = await Recipes.findRecipeById(validRecipeId);
+    await Recipes.deleteRecipe(validRecipeId);
     const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
     res.status(200).json({ deletedRecipe, recipes });
   } catch (err) {

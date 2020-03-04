@@ -169,6 +169,35 @@ describe("server", () => {
             ]);
           });
       });
+
+      it("should return 401 status if recipeId doesn't exist", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .put("/api/auth/recipes/100")
+              .set({ Authorization: token })
+              .send({
+                title: "Cheeseburger",
+                source: "Grandma Dina",
+                ingredients:
+                  "Beef, cheese, two slices of cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding two slices of cheese towards the end. Place on bun with condiments and serve.",
+                image: "picture.jpeg",
+                category: "Dinner"
+              });
+
+            expect(res.status).toBe(401);
+          });
+      });
     });
 
     describe("DELETE /recipes/:id", () => {
@@ -196,6 +225,25 @@ describe("server", () => {
             expect(res.status).toBe(200);
             expect(res.body.deletedRecipe).toBeTruthy();
             expect(res.body.recipes).toStrictEqual([]);
+          });
+      });
+
+      it("should return 401 status if recipeId doesn't exist", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .delete("/api/auth/recipes/100")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(401);
           });
       });
     });
