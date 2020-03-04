@@ -249,13 +249,13 @@ describe("custom-middleware", () => {
   });
 
   describe("validateRecipeId", () => {
-    it("should 401 if recipe id doesn't exist", async () => {
+    it("should 400 if recipe id doesn't exist", async () => {
       const req = mockRequest("", 100);
       const res = mockResponse();
 
       await validateRecipeId(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
     it("should call next if recipe id exists", async () => {

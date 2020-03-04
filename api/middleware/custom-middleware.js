@@ -51,7 +51,7 @@ const validateRecipeId = async (req, res, next) => {
     const recipe = await findRecipeById(id);
     recipe
       ? ((req.validRecipeId = recipe.id), next())
-      : res.status(401).json({ message: `Recipe id ${id} not found.` });
+      : res.status(400).json({ message: `Recipe id ${id} not found.` });
   } catch (err) {
     res.status(500).json(err);
   }

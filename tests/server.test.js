@@ -170,7 +170,7 @@ describe("server", () => {
           });
       });
 
-      it("should return 401 status if recipeId doesn't exist", async () => {
+      it("should return 400 status if recipeId doesn't exist", async () => {
         await request(server)
           .post("/api/login")
           .send({
@@ -195,7 +195,7 @@ describe("server", () => {
                 category: "Dinner"
               });
 
-            expect(res.status).toBe(401);
+            expect(res.status).toBe(400);
           });
       });
     });
@@ -228,7 +228,7 @@ describe("server", () => {
           });
       });
 
-      it("should return 401 status if recipeId doesn't exist", async () => {
+      it("should return 400 status if recipeId doesn't exist", async () => {
         await request(server)
           .post("/api/login")
           .send({
@@ -243,7 +243,7 @@ describe("server", () => {
               .delete("/api/auth/recipes/100")
               .set({ Authorization: token });
 
-            expect(res.status).toBe(401);
+            expect(res.status).toBe(400);
           });
       });
     });
