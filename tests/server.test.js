@@ -120,7 +120,7 @@ describe("server", () => {
       });
     });
 
-    describe("PUT /recipes", () => {
+    describe("PUT /recipes/:id", () => {
       it("should require auth", async () => {
         const res = await request(server).put("/api/auth/recipes/1");
 
@@ -167,6 +167,35 @@ describe("server", () => {
                 user_id: 1
               }
             ]);
+          });
+      });
+    });
+
+    describe("DELETE /recipes/:id", () => {
+      it("should require auth", async () => {
+        const res = await request(server).delete("/api/auth/recipes/1");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 200 status, fresh list of recipes for logged in user, and deleted recipe", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .delete("/api/auth/recipes/1")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(200);
+            expect(res.body.deletedRecipe).toBeTruthy();
+            expect(res.body.recipes).toStrictEqual([]);
           });
       });
     });

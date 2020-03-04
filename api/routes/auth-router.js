@@ -44,4 +44,18 @@ router.put("/recipes/:id", validateRecipe, async (req, res) => {
   }
 });
 
+router.delete("/recipes/:id", async (req, res) => {
+  const { decodedJwt } = req;
+  const { id } = req.params;
+
+  try {
+    const deletedRecipe = await Recipes.findRecipeById(id);
+    await Recipes.deleteRecipe(id);
+    const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
+    res.status(200).json({ deletedRecipe, recipes });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
