@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../data/dbConfig");
 const {
-  validateUser,
+  validateRegistration,
+  validateLogin,
   validateRecipe,
   validateRecipeId,
   auth
@@ -51,16 +52,16 @@ afterAll(async () => {
 });
 
 describe("custom-middleware", () => {
-  describe("validateUser", () => {
+  describe("validateRegistration", () => {
     it("should 400 if body is empty", async () => {
       const req = mockRequest({});
       const res = mockResponse();
 
-      await validateUser(req, res);
+      await validateRegistration(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Username and password required."
+        message: "Email, username and password required."
       });
     });
 
@@ -68,7 +69,7 @@ describe("custom-middleware", () => {
       const req = mockRequest({ password: "pass", email: "test1@email.com" });
       const res = mockResponse();
 
-      await validateUser(req, res);
+      await validateRegistration(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -80,7 +81,7 @@ describe("custom-middleware", () => {
       const req = mockRequest({ username: "Chris", email: "test1@email.com" });
       const res = mockResponse();
 
-      await validateUser(req, res);
+      await validateRegistration(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -92,7 +93,7 @@ describe("custom-middleware", () => {
       const req = mockRequest({ username: "Chris", password: "pass" });
       const res = mockResponse();
 
-      await validateUser(req, res);
+      await validateRegistration(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -109,12 +110,67 @@ describe("custom-middleware", () => {
       const res = mockResponse();
       const next = jest.fn();
 
-      await validateUser(req, res, next);
+      await validateRegistration(req, res, next);
 
       expect(req.validUser).toStrictEqual({
         username: "Chris",
         password: "pass",
         email: "test1@email.com"
+      });
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe("validateLogin", () => {
+    it("should 400 if body is empty", async () => {
+      const req = mockRequest({});
+      const res = mockResponse();
+
+      await validateLogin(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Username and password required."
+      });
+    });
+
+    it("should 400 if username is missing from body", async () => {
+      const req = mockRequest({ password: "pass" });
+      const res = mockResponse();
+
+      await validateLogin(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Username required."
+      });
+    });
+
+    it("should 400 if password is missing from body", async () => {
+      const req = mockRequest({ username: "Chris" });
+      const res = mockResponse();
+
+      await validateLogin(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Password required."
+      });
+    });
+
+    it("should call next if username, password are in body", async () => {
+      const req = mockRequest({
+        username: "Chris",
+        password: "pass"
+      });
+      const res = mockResponse();
+      const next = jest.fn();
+
+      await validateLogin(req, res, next);
+
+      expect(req.validUser).toStrictEqual({
+        username: "Chris",
+        password: "pass"
       });
       expect(next).toHaveBeenCalled();
     });

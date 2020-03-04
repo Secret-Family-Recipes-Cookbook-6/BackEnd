@@ -2,7 +2,24 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const { findRecipeById } = require("../models/recipes-model");
 
-const validateUser = (req, res, next) => {
+const validateLogin = (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (Object.keys(req.body).length !== 0) {
+    if (username && password) {
+      req.validUser = { ...req.body };
+      next();
+    } else if (!username) {
+      res.status(400).json({ message: "Username required." });
+    } else if (!password) {
+      res.status(400).json({ message: "Password required." });
+    }
+  } else {
+    res.status(400).json({ message: "Username and password required." });
+  }
+};
+
+const validateRegistration = (req, res, next) => {
   const { username, password, email } = req.body;
 
   if (Object.keys(req.body).length !== 0) {
@@ -17,7 +34,7 @@ const validateUser = (req, res, next) => {
       res.status(400).json({ message: "Email required." });
     }
   } else {
-    res.status(400).json({ message: "Username and password required." });
+    res.status(400).json({ message: "Email, username and password required." });
   }
 };
 
@@ -82,8 +99,9 @@ const auth = (req, res, next) => {
 };
 
 module.exports = {
-  validateUser,
+  validateRegistration,
   validateRecipe,
   validateRecipeId,
+  validateLogin,
   auth
 };
