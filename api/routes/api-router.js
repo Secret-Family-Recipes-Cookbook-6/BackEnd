@@ -58,7 +58,7 @@ router.post("/register", validateUser, async (req, res) => {
     const token = genToken(newUser);
     res.status(201).json({ newUser, token });
   } catch (err) {
-    res.status(500).json(err.message);
+    res.status(500).json(err);
   }
 });
 
@@ -75,7 +75,7 @@ router.post("/login", validateUser, async (req, res) => {
       res.status(401).json({ message: "Invalid credentials." });
     }
   } catch (err) {
-    res.status(500).json(err.message);
+    res.status(500).json(err);
   }
 });
 

@@ -31,6 +31,7 @@ describe("server", () => {
         .post("/api/register")
         .send({
           username: "Chris",
+          email: "test1@email.com",
           password: "pass"
         });
 
@@ -44,7 +45,11 @@ describe("server", () => {
     it("should return 200 status, recipes, token on successful login", async () => {
       const res = await request(server)
         .post("/api/login")
-        .send({ username: "Chris", password: "pass" });
+        .send({
+          username: "Chris",
+          email: "test1@email.com",
+          password: "pass"
+        });
 
       expect(res.status).toBe(200);
       expect(res.body.token).toBeTruthy();

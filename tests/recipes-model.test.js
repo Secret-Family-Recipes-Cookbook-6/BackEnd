@@ -10,7 +10,11 @@ const {
 } = require("../api/models/recipes-model");
 
 beforeAll(async () => {
-  await addUser({ username: "Chris", password: bcrypt.hashSync("pass", 10) });
+  await addUser({
+    username: "Chris",
+    password: bcrypt.hashSync("pass", 10),
+    email: "test1@email.com"
+  });
 });
 
 beforeEach(async () => {

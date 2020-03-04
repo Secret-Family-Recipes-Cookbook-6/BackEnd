@@ -29,7 +29,7 @@ describe("custom-middleware", () => {
     });
 
     it("should 400 if username is missing from body", async () => {
-      const req = mockRequest({ password: "pass" });
+      const req = mockRequest({ password: "pass", email: "test1@email.com" });
       const res = mockResponse();
 
       await validateUser(req, res);
@@ -41,7 +41,7 @@ describe("custom-middleware", () => {
     });
 
     it("should 400 if password is missing from body", async () => {
-      const req = mockRequest({ username: "Chris" });
+      const req = mockRequest({ username: "Chris", email: "test1@email.com" });
       const res = mockResponse();
 
       await validateUser(req, res);
@@ -52,8 +52,24 @@ describe("custom-middleware", () => {
       });
     });
 
-    it("should call next if username and password are in body", async () => {
+    it("should 400 if email is missing from body", async () => {
       const req = mockRequest({ username: "Chris", password: "pass" });
+      const res = mockResponse();
+
+      await validateUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Email required."
+      });
+    });
+
+    it("should call next if username, email, password are in body", async () => {
+      const req = mockRequest({
+        username: "Chris",
+        password: "pass",
+        email: "test1@email.com"
+      });
       const res = mockResponse();
       const next = jest.fn();
 
@@ -61,7 +77,8 @@ describe("custom-middleware", () => {
 
       expect(req.validUser).toStrictEqual({
         username: "Chris",
-        password: "pass"
+        password: "pass",
+        email: "test1@email.com"
       });
       expect(next).toHaveBeenCalled();
     });
