@@ -1,3 +1,10 @@
+require("dotenv").config();
+const { addUser } = require("../api/models/users-model");
+const { addRecipe } = require("../api/models/recipes-model");
+const genToken = require("../api/utils/genToken");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const db = require("../data/dbConfig");
 const {
   validateUser,
   validateRecipe,
@@ -5,12 +12,11 @@ const {
   auth
 } = require("../api/middleware/custom-middleware");
 
-const { addUser } = require("../api/models/users-model");
-const { addRecipe } = require("../api/models/recipes-model");
-const bcrypt = require("bcryptjs");
-const db = require("../data/dbConfig");
-
-const mockRequest = (body, id) => ({ body, params: { id } });
+const mockRequest = (body, id, decodedJwt) => ({
+  body,
+  params: { id },
+  decodedJwt
+});
 
 const mockResponse = () => {
   const res = {};
@@ -259,7 +265,10 @@ describe("custom-middleware", () => {
     });
 
     it("should call next if recipe id exists", async () => {
-      const req = mockRequest("", 1);
+      const token = genToken({ id: 1, username: "Chris" });
+      const decodedToken = jwt.decode(token);
+
+      const req = mockRequest("", 1, decodedToken);
       const res = mockResponse();
       const next = jest.fn();
 

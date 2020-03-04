@@ -45,12 +45,17 @@ const validateRecipe = (req, res, next) => {
 };
 
 const validateRecipeId = async (req, res, next) => {
+  const { decodedJwt } = req;
   const { id } = req.params;
 
   try {
     const recipe = await findRecipeById(id);
     recipe
-      ? ((req.validRecipeId = recipe.id), next())
+      ? recipe.user_id === decodedJwt.sub
+        ? ((req.validRecipeId = recipe.id), next())
+        : res.status(401).json({
+            message: `Not authorized to touch a recipe that is not yours.`
+          })
       : res.status(400).json({ message: `Recipe id ${id} not found.` });
   } catch (err) {
     res.status(500).json(err);
