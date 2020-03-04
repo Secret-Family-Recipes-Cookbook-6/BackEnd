@@ -30,4 +30,18 @@ router.post("/recipes", validateRecipe, async (req, res) => {
   }
 });
 
+router.put("/recipes/:id", validateRecipe, async (req, res) => {
+  const { decodedJwt, validRecipe } = req;
+  const { id } = req.params;
+
+  try {
+    await Recipes.updateRecipe(id, validRecipe);
+
+    const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
+    res.status(201).json(recipes);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 module.exports = router;
