@@ -84,5 +84,40 @@ describe("server", () => {
           });
       });
     });
+
+    describe("POST /recipes", () => {
+      it("should require auth", async () => {
+        const res = await request(server).post("/api/auth/recipes");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 201 status and fresh list of recipes for logged in user", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .post("/api/auth/recipes")
+              .set({ Authorization: token })
+              .send({
+                title: "Hamburger",
+                source: "Grandma Edna",
+                ingredients: "Beef, cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
+                category: "Lunch"
+              });
+
+            expect(res.status).toBe(201);
+          });
+      });
+    });
   });
 });

@@ -15,4 +15,19 @@ router.get("/recipes", async (req, res) => {
   }
 });
 
+router.post("/recipes", validateRecipe, async (req, res) => {
+  const { decodedJwt, validRecipe } = req;
+
+  try {
+    await Recipes.addRecipe({
+      ...validRecipe,
+      user_id: decodedJwt.sub
+    });
+    const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
+    res.status(201).json(recipes);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
