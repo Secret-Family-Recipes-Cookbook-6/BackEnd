@@ -2,16 +2,18 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
 const validateUser = (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   if (Object.keys(req.body).length !== 0) {
-    if (username && password) {
+    if (username && password && email) {
       req.validUser = { ...req.body };
       next();
     } else if (!username) {
       res.status(400).json({ message: "Username required." });
     } else if (!password) {
       res.status(400).json({ message: "Password required." });
+    } else if (!email) {
+      res.status(400).json({ message: "Email required." });
     }
   } else {
     res.status(400).json({ message: "Username and password required." });

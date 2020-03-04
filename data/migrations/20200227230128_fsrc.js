@@ -6,6 +6,10 @@ exports.up = function(knex) {
         .string("username", 255)
         .notNullable()
         .unique();
+      user
+        .string("email", 255)
+        .notNullable()
+        .unique();
       user.string("password", 255).notNullable();
     })
     .createTable("recipes", recipe => {

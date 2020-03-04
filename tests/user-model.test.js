@@ -13,7 +13,8 @@ beforeEach(async () => {
   await db("users").truncate();
   await addUser({
     username: "Chris",
-    password: bcrypt.hashSync("pass", 10)
+    password: bcrypt.hashSync("pass", 10),
+    email: "test1@email.com"
   });
 });
 
@@ -34,7 +35,9 @@ describe("users-model", () => {
     it("should return an array of user objects", async () => {
       const users = await findUsers();
 
-      expect(users).toEqual([{ id: 1, username: "Chris" }]);
+      expect(users).toEqual([
+        { id: 1, username: "Chris", email: "test1@email.com" }
+      ]);
     });
   });
 
@@ -42,7 +45,11 @@ describe("users-model", () => {
     it("should return the user for the id passed in", async () => {
       const user = await findUserById(1);
 
-      expect(user).toEqual({ id: 1, username: "Chris" });
+      expect(user).toEqual({
+        id: 1,
+        username: "Chris",
+        email: "test1@email.com"
+      });
     });
   });
 
@@ -73,6 +80,7 @@ describe("users-model", () => {
 
       const changes = {
         username: "Mike",
+        email: "test2@email.com",
         password: bcrypt.hashSync("newpass", 10)
       };
 
@@ -81,6 +89,7 @@ describe("users-model", () => {
       const updatedUser = await findUserByUsername("Mike");
 
       expect(updatedUser.username).toEqual("Mike");
+      expect(updatedUser.email).toEqual("test2@email.com");
       expect(bcrypt.compareSync("newpass", updatedUser.password)).toBe(true);
     });
   });

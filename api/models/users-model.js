@@ -1,7 +1,7 @@
 const db = require("../../data/dbConfig");
 
 const findUsers = () => {
-  return db("users").select("id", "username");
+  return db("users").select("id", "username", "email");
 };
 
 const addUser = async user => {
@@ -21,7 +21,7 @@ const findUserByUsername = username => {
 const findUserById = id => {
   return db("users")
     .where({ id })
-    .select("id", "username")
+    .select("id", "username", "email")
     .first();
 };
 
