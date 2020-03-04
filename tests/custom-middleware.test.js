@@ -1,10 +1,16 @@
 const {
   validateUser,
   validateRecipe,
+  validateRecipeId,
   auth
 } = require("../api/middleware/custom-middleware");
 
-const mockRequest = body => ({ body });
+const { addUser } = require("../api/models/users-model");
+const { addRecipe } = require("../api/models/recipes-model");
+const bcrypt = require("bcryptjs");
+const db = require("../data/dbConfig");
+
+const mockRequest = (body, id) => ({ body, params: { id } });
 
 const mockResponse = () => {
   const res = {};
@@ -13,6 +19,30 @@ const mockResponse = () => {
 
   return res;
 };
+
+beforeAll(async () => {
+  await db("users").truncate();
+  await db("recipes").truncate();
+  await addUser({
+    username: "Chris",
+    password: bcrypt.hashSync("pass", 10),
+    email: "test1@email.com"
+  });
+  await addRecipe({
+    title: "Hamburger",
+    source: "Grandma Edna",
+    ingredients: "Beef, cheese, lettuce, tomato",
+    instructions:
+      "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
+    category: "Lunch",
+    user_id: 1
+  });
+});
+
+afterAll(async () => {
+  await db("users").truncate();
+  await db("recipes").truncate();
+});
 
 describe("custom-middleware", () => {
   describe("validateUser", () => {
@@ -210,5 +240,32 @@ describe("custom-middleware", () => {
       });
       expect(next).toHaveBeenCalled();
     });
-  }); // todo Add auth middleware tests
+  });
+
+  describe("auth", () => {
+    it("should auth", async () => {
+      // todo});
+    });
+  });
+
+  describe("validateRecipeId", () => {
+    it("should 400 if recipe id doesn't exist", async () => {
+      const req = mockRequest("", 100);
+      const res = mockResponse();
+
+      await validateRecipeId(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+    });
+
+    it("should call next if recipe id exists", async () => {
+      const req = mockRequest("", 1);
+      const res = mockResponse();
+      const next = jest.fn();
+
+      await validateRecipeId(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });

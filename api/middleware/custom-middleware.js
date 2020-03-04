@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
+const { findRecipeById } = require("../models/recipes-model");
 
 const validateUser = (req, res, next) => {
   const { username, password, email } = req.body;
@@ -43,6 +44,19 @@ const validateRecipe = (req, res, next) => {
   }
 };
 
+const validateRecipeId = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const recipe = await findRecipeById(id);
+    recipe
+      ? ((req.validRecipeId = recipe.id), next())
+      : res.status(400).json({ message: `Recipe id ${id} not found.` });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 const auth = (req, res, next) => {
   const token = req.headers.authorization;
 
@@ -65,5 +79,6 @@ const auth = (req, res, next) => {
 module.exports = {
   validateUser,
   validateRecipe,
+  validateRecipeId,
   auth
 };

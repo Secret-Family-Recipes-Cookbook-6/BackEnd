@@ -56,4 +56,196 @@ describe("server", () => {
       expect(res.body.recipes).toBeTruthy();
     });
   });
+
+  describe("/auth", () => {
+    describe("GET /recipes", () => {
+      it("should require auth", async () => {
+        const res = await request(server).get("/api/auth/recipes");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 200 status and recipes for logged in user", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .get("/api/auth/recipes")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(200);
+          });
+      });
+    });
+
+    describe("POST /recipes", () => {
+      it("should require auth", async () => {
+        const res = await request(server).post("/api/auth/recipes");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 201 status and fresh list of recipes for logged in user", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .post("/api/auth/recipes")
+              .set({ Authorization: token })
+              .send({
+                title: "Hamburger",
+                source: "Grandma Edna",
+                ingredients: "Beef, cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding cheese towards the end. Place on bun with condiments and serve.",
+                category: "Lunch"
+              });
+
+            expect(res.status).toBe(201);
+          });
+      });
+    });
+
+    describe("PUT /recipes/:id", () => {
+      it("should require auth", async () => {
+        const res = await request(server).put("/api/auth/recipes/1");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 201 status and fresh list of recipes for logged in user", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .put("/api/auth/recipes/1")
+              .set({ Authorization: token })
+              .send({
+                title: "Cheeseburger",
+                source: "Grandma Dina",
+                ingredients:
+                  "Beef, cheese, two slices of cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding two slices of cheese towards the end. Place on bun with condiments and serve.",
+                image: "picture.jpeg",
+                category: "Dinner"
+              });
+
+            expect(res.status).toBe(201);
+            expect(res.body).toStrictEqual([
+              {
+                id: 1,
+                title: "Cheeseburger",
+                source: "Grandma Dina",
+                ingredients:
+                  "Beef, cheese, two slices of cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding two slices of cheese towards the end. Place on bun with condiments and serve.",
+                image: "picture.jpeg",
+                category: "Dinner",
+                user_id: 1
+              }
+            ]);
+          });
+      });
+
+      it("should return 400 status if recipeId doesn't exist", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .put("/api/auth/recipes/100")
+              .set({ Authorization: token })
+              .send({
+                title: "Cheeseburger",
+                source: "Grandma Dina",
+                ingredients:
+                  "Beef, cheese, two slices of cheese, lettuce, tomato",
+                instructions:
+                  "Grill the burgers while adding two slices of cheese towards the end. Place on bun with condiments and serve.",
+                image: "picture.jpeg",
+                category: "Dinner"
+              });
+
+            expect(res.status).toBe(400);
+          });
+      });
+    });
+
+    describe("DELETE /recipes/:id", () => {
+      it("should require auth", async () => {
+        const res = await request(server).delete("/api/auth/recipes/1");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 200 status, fresh list of recipes for logged in user, and deleted recipe", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .delete("/api/auth/recipes/1")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(200);
+            expect(res.body.deletedRecipe).toBeTruthy();
+            expect(res.body.recipes).toStrictEqual([]);
+          });
+      });
+
+      it("should return 400 status if recipeId doesn't exist", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .delete("/api/auth/recipes/100")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(400);
+          });
+      });
+    });
+  });
 });
