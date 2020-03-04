@@ -3,8 +3,12 @@ const bcrypt = require("bcryptjs");
 const Users = require("../models/users-model");
 const Recipes = require("../models/recipes-model");
 const genToken = require("../utils/genToken");
-const { validateUser, auth } = require("../middleware/custom-middleware");
 const authRouter = require("./auth-router");
+const {
+  validateRegistration,
+  validateLogin,
+  auth
+} = require("../middleware/custom-middleware");
 
 router.use("/auth", auth, authRouter);
 
@@ -12,7 +16,7 @@ router.get("/", (req, res) => {
   res.status(200).json({ api: "up" });
 });
 
-router.post("/register", validateUser, async (req, res) => {
+router.post("/register", validateRegistration, async (req, res) => {
   const { validUser } = req;
 
   const hash = bcrypt.hashSync(validUser.password, 10);
@@ -28,7 +32,7 @@ router.post("/register", validateUser, async (req, res) => {
   }
 });
 
-router.post("/login", validateUser, async (req, res) => {
+router.post("/login", validateLogin, async (req, res) => {
   const { username, password } = req.validUser;
 
   try {
