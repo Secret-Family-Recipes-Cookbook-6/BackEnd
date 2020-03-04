@@ -43,7 +43,6 @@ router.put(
 
     try {
       await Recipes.updateRecipe(validRecipeId, validRecipe);
-
       const recipes = await Recipes.findRecipesBy({ user_id: decodedJwt.sub });
       res.status(201).json(recipes);
     } catch (err) {

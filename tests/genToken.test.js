@@ -2,7 +2,7 @@ require("dotenv").config();
 const genToken = require("../api/utils/genToken");
 const jwt = require("jsonwebtoken");
 
-describe("getToken", () => {
+describe("genToken", () => {
   it("returns a JWT token", () => {
     user = {
       id: 1,
