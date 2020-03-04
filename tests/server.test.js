@@ -56,4 +56,33 @@ describe("server", () => {
       expect(res.body.recipes).toBeTruthy();
     });
   });
+
+  describe("/auth", () => {
+    describe("GET /recipes", () => {
+      it("should require auth", async () => {
+        const res = await request(server).get("/api/auth/recipes");
+
+        expect(res.status).toBe(401);
+      });
+
+      it("should return 200 status and recipes for logged in user", async () => {
+        await request(server)
+          .post("/api/login")
+          .send({
+            username: "Chris",
+            email: "test1@email.com",
+            password: "pass"
+          })
+          .then(async user => {
+            const token = user.body.token;
+
+            const res = await request(server)
+              .get("/api/auth/recipes")
+              .set({ Authorization: token });
+
+            expect(res.status).toBe(200);
+          });
+      });
+    });
+  });
 });

@@ -3,8 +3,10 @@ const bcrypt = require("bcryptjs");
 const Users = require("../models/users-model");
 const Recipes = require("../models/recipes-model");
 const genToken = require("../utils/genToken");
+const { validateUser, auth } = require("../middleware/custom-middleware");
+const authRouter = require("./auth-router");
 
-const { validateUser } = require("../middleware/custom-middleware");
+router.use("/auth", auth, authRouter);
 
 router.get("/", (req, res) => {
   res.status(200).json({ api: "up" });
