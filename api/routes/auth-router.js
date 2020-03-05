@@ -27,10 +27,10 @@ router.post("/recipes", multerUploads, validateRecipe, async (req, res) => {
     // check if file exists
     if (req.file) {
       const file = dataUri(req).content;
-      const result = await uploader.upload(file);
+      const image = await uploader.upload(file);
       await Recipes.addRecipe({
         ...validRecipe,
-        image: result.url,
+        image: image.url,
         user_id: decodedJwt.sub
       });
     } else {
@@ -48,6 +48,7 @@ router.post("/recipes", multerUploads, validateRecipe, async (req, res) => {
 
 router.put(
   "/recipes/:id",
+  multerUploads,
   validateRecipeId,
   validateRecipe,
   async (req, res) => {
@@ -57,9 +58,11 @@ router.put(
     try {
       // check if  file exists
       if (req.file) {
+        const file = dataUri(req).content;
+        const image = await uploader.upload(file);
         await Recipes.updateRecipe(validRecipeId, {
           ...validRecipe,
-          image: req.file.path
+          image: image.url
         });
       } else {
         await Recipes.updateRecipe(validRecipeId, validRecipe);
