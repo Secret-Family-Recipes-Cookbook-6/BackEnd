@@ -44,7 +44,7 @@ https://secret-fam-rc.herokuapp.com/api
 
 ## Documentation
 
-TODO
+Full documentation can be found [here](https://documenter.getpostman.com/view/9170928/SzRuZCfA)
 
 ## Author
 
