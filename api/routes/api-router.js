@@ -9,8 +9,9 @@ const {
   validateLogin,
   auth
 } = require("../middleware/custom-middleware");
+const { cloudinaryConfig } = require("../config/cloudinaryConfig");
 
-router.use("/auth", auth, authRouter);
+router.use("/auth", auth, cloudinaryConfig, authRouter);
 
 router.get("/", (req, res) => {
   res.status(200).json({ api: "up" });
