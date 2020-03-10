@@ -18,6 +18,9 @@ jsonwebtoken
 knex
 knex-cleaner
 pg
+multer
+cloudinary
+datauri
 ```
 
 ## Dev Dependencies
